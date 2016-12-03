@@ -1,0 +1,33 @@
+{
+  "name": "janus-samples",
+  "private": true,
+  "description": "sample projects for the janus framework",
+  "version": "0.2.0",
+  "author": "Clint Tseng <clint@dontexplain.com>",
+  "homepage": "http://janusjs.org",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/clint-tseng/janus-samples.git"
+  },
+  "bugs": {
+    "url": "https://github.com/clint-tseng/janus-samples/issues"
+  },
+  "license": "WTFPL",
+  "main": "lib/shell",
+  "scripts": {
+    "test": "make test"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "keywords": [ "framework", "server-side", "mvvm", "frp", "rx", "application", "508", "seo" ],
+  "dependencies": {
+    "janus": "git://github.com/clint-tseng/janus.git",
+    "janus-stdlib": "~0.2.0"
+  },
+  "devDependencies": {
+    "coffee-script": "~1.11",
+    "mocha": "~3",
+    "should": "~11"
+  }
+}
