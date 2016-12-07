@@ -37,8 +37,10 @@ Challenge problems
 Try adding some of the following functionality as a sort of challenge; they're roughly in increasing order of difficulty:
 
 * Allow a top-level TodoList to be removed after it's created.
+* Allow a color or emoji to be assigned to each Todo. Especially for color, the `classGroup` mutation should prove to be useful.
 * Show the total number of sub-Todos that exist and are completed in addition to the top-level. `List#map()` will be your friend.
 * Instead of clicking New to add a Todo, make it behave like the sub-Todos do.
+* Allow each todo to be able to point at one or more prerequisite todos from the same list. Go to and highlight that todo when clicked.
 * Suggest others via pull request!
 
 License
