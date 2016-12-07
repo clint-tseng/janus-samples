@@ -57,10 +57,16 @@
     }
 
     TodoListView._dom = function() {
-      return $('<div class="todoList"> <div class="todoList-titleWrapper"> <span class="todoList-titleField"></span> <span class="todoList-titleGhost"></span> </div> <div class="todos"></div> <div class="toolbar"> <button class="addTodo">New</button> </div> </div>');
+      return $('<div class="todoList"> <div class="todoList-titleWrapper"> <span class="todoList-titleField"></span> <span class="todoList-titleGhost"></span> </div> <div class="todos"></div> <div class="empty">No items yet.</div> <div class="toolbar"> <button class="addTodo">New</button> </div> </div>');
     };
 
-    TodoListView._template = template(find('.todoList-titleField').render(from.attribute('name')).context('edit'), find('.todoList-titleGhost').text(from('name').map(textOrElse('(untitled list)'))), find('.todos').render(from('todos')));
+    TodoListView._template = template(find('.todoList-titleField').render(from.attribute('name')).context('edit'), find('.todoList-titleGhost').text(from('name').map(textOrElse('(untitled list)'))), find('.todoList-titleWrapper').classed('hasText', from('name').map(function(x) {
+      return !blank(x);
+    })), find('.todos').render(from('todos')), find('.empty').classed('hide', from('todos').flatMap(function(list) {
+      return list.watchLength().map(function(x) {
+        return x > 0;
+      });
+    })));
 
     TodoListView.prototype._wireEvents = function() {
       var dom;

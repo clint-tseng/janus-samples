@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "coffee-script": "~1.11",
+    "node-sass": "~3",
     "mocha": "~3",
     "should": "~11"
   }

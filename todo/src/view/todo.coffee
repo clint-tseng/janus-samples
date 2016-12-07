@@ -27,8 +27,8 @@ class TodoView extends DomView
     <div class="todo">
       <div class="summaryLine">
         <div class="todoCheck"></div>
-        <div class="todoTitle"></div>
         <div class="todoExpand"></div>
+        <div class="todoTitle"></div>
       </div>
       <div class="detailLine">
         <div class="todoDescription"></div>
@@ -42,11 +42,20 @@ class TodoView extends DomView
     find('.todo').classed('done', from('subject').watch('done'))
 
     find('.todoCheck').render(from('subject').attribute('done')).context('edit')
-    find('.todoTitle').render(from('subject').attribute('name')).context('edit')
-    find('.todoExpand').render(from.attribute('expanded')).context('edit').find( attributes: { style: 'button' } )
+    find('.todoTitle').render(from('subject').attribute('name'))
+      .context('edit')
+      .options( placeholder: '(new todo)' )
+
+    find('.todoExpand').render(from.attribute('expanded'))
+      .context('edit')
+      .find( attributes: { style: 'button' } )
+      .options( stringify: (x) -> if x is true then '\u25bc' else '\u25c0' )
     find('.detailLine').classed('expanded', from('expanded'))
 
-    find('.todoDescription').render(from('subject').attribute('description')).context('edit').find( attributes: { style: 'multiline' })
+    find('.todoDescription').render(from('subject').attribute('description'))
+      .context('edit')
+      .find( attributes: { style: 'multiline' })
+      .options( placeholder: '(details)' )
     find('.todoSubitems').render(from('subject').watch('subitems')).context('edit')
     find('.todoDummySubitem').render(from('dummySubitem'))
   )

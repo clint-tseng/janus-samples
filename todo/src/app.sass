@@ -1,0 +1,305 @@
+// basic reset:
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p,
+blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em,
+font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var,
+b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td
+  margin: 0
+  padding: 0
+  border: 0
+  outline: 0
+  vertical-align: baseline
+  background: transparent
+
+body
+  font-size: 62.5%
+  line-height: 1
+
+// util:
+@mixin fill
+  bottom: 0
+  left: 0
+  position: absolute
+  right: 0
+  top: 0
+
+@mixin no-select
+  cursor: default
+  -webkit-user-select: none
+
+@mixin bare-textbox
+  background: transparent
+  border: none
+  display: block
+  margin: 0
+  outline: none
+  padding: 0
+  -webkit-appearance: none
+
+// general:
+$font: -apple-system, "lucida grande", helvetica, arial, sans-serif
+
+body
+  color: #222
+  font-family: $font
+  overflow: hidden
+
+ul
+  list-style-type: none
+
+input
+  font-family: $font
+
+.hide
+  display: none !important
+
+// components:
+.todoListSummary
+  padding: 1em 1.8em
+
+  .name
+    font-size: 1.4em
+    overflow: hidden
+    padding-bottom: 0.2em
+    text-overflow: ellipsis
+    white-space: nowrap
+
+  .completion
+    color: #888
+
+.todoList
+  .todoList-titleWrapper
+    height: 3em
+    margin: 1.2em 1.6em
+    position: relative
+
+    $max-width: calc(100% - 2em)
+
+    input[type=text]
+      @include fill
+      @include bare-textbox
+      font-size: 1.6em
+      width: $max-width
+
+    .todoList-titleGhost
+      @include fill
+      color: rgba(0, 0, 0, 0.6)
+      display: inline-block
+      font-size: 1.6em
+      line-height: 1.9em
+      max-width: $max-width
+      pointer-events: none
+      position: relative
+      right: auto
+      white-space: nowrap
+
+      &:after
+        content: '✎'
+        color: #666
+        display: block
+        position: absolute
+        right: -1.3em
+        top: 0
+
+    &.hasText .todoList-titleGhost
+      color: transparent
+
+  .empty
+    @include no-select
+    position: absolute
+    text-align: center
+    top: calc(50% - 1em)
+    width: 100%
+
+@keyframes expandpop
+  0%
+    margin-bottom: -1em
+    opacity: 0.4
+  100%
+    margin-bottom: 0
+    opacity: 1
+
+.todo
+  .summaryLine
+    overflow: hidden
+
+    .todoCheck
+      float: left
+    .todoTitle
+      float: none
+      overflow: hidden
+    .todoExpand
+      float: right
+
+    input[type=text]
+      @include bare-textbox
+      color: #222
+      font-size: 1.5em
+      margin-left: 0.4em
+      width: calc(100% - 1em)
+
+  &.done .summaryLine input[type=text]
+    text-decoration: line-through
+
+  .todoExpand button
+    background: none
+    border: none
+    color: #666
+    margin: 0
+    padding: 0.3em 0.5em
+    outline: none
+    -webkit-appearance: none
+
+  .detailLine
+    display: none
+    overflow: hidden
+
+    &.expanded
+      animation: 0.2s ease-out 0 expandpop
+      animation-iteration-count: 1
+      display: block
+
+    textarea
+      background: rgba(0, 0, 0, 0.06)
+      border: none
+      margin-left: 2em
+      margin-top: 0.5em
+      min-height: 5em
+      outline: none
+      padding: 0.3em 0.5em
+      width: 100%
+
+    .todoSubitems
+      margin-left: 2em
+      padding-top: 0.7em
+
+      > .janus-list > li
+        padding: 0.1em 0
+
+      .janus-list-editItem
+        position: relative
+
+        > a
+          color: transparent
+          height: 1.4em
+          overflow: hidden
+          position: absolute
+          top: 0.2em
+          transition: 0.2s opacity
+          width: 1.4em
+
+          &:before
+            color: #666
+            display: block
+            height: 1em
+            font-size: 1.4em
+            left: 0
+            position: absolute
+            top: 0
+            width: 1em
+
+          &.janus-list-editItem-moveUp
+            opacity: 0.06
+            right: 3.4em
+            &:before
+              content: '↑'
+          &.janus-list-editItem-moveDown
+            opacity: 0.06
+            right: 1.7em
+            &:before
+              content: '↓'
+          &.janus-list-editItem-remove
+            right: 0
+            &:before
+              content: '×'
+
+          &.disabled
+            cursor: default
+            visibility: hidden
+
+        &:hover
+          .janus-list-editItem-moveUp, .janus-list-editItem-moveDown
+            opacity: 1
+
+    .todoDummySubitem
+      margin-left: 2em
+      padding-top: 0.2em
+      opacity: 0.4
+
+.subtodo
+  overflow: hidden
+  .subtodoCheck
+    float: left
+
+  input[type=text]
+    @include bare-textbox
+    font-size: 1.1em
+    padding: 0.2em 0.4em
+    width: calc(100% - 7em)
+
+  &.done input[type=text]
+    text-decoration: line-through
+
+// layout:
+
+$lwidth: 20em // width of the left column
+
+.left
+  @include fill
+  @include no-select
+  background: #e4e4e4
+  right: auto
+  width: $lwidth
+
+  .todoList
+    @include fill
+    overflow-x: hidden
+    overflow-y: auto
+
+    .janus-list
+      padding-bottom: 2.5em
+
+      &:first-child
+        margin-top: 1em
+
+      .janus-list-selectItem
+        display: block
+        position: relative
+
+        .janus-list-selectItem-select
+          @include fill
+          opacity: 0
+          width: 100%
+
+        &.checked .todoListSummary
+          background: #aaa
+          color: #fff
+
+          .completion
+            color: #fff
+
+.right
+  @include fill
+  background: #f7f7f7 url(assets/background.png)
+  border-left: 1px solid #ccc
+  left: $lwidth
+
+  .todos > .janus-list > li
+    border-top: 1px dotted #ccc
+    &:first-child
+      border-top: none
+
+    .todo
+      margin: 0 1.4em
+      padding: 1em 0
+
+.toolbar
+  @include fill
+  padding: 1em
+  pointer-events: none
+  text-align: right
+  top: auto
+
+  button
+    pointer-events: auto
+

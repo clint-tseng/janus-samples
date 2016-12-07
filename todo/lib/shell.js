@@ -13,7 +13,9 @@
   app.on('ready', function() {
     hWnd = new BrowserWindow({
       width: 650,
-      height: 480
+      minWidth: 650,
+      height: 480,
+      minHeight: 480
     });
     hWnd.loadURL(url.format({
       pathname: path.join(__dirname, 'app.html'),

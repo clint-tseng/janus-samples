@@ -36,6 +36,7 @@ class TodoListView extends DomView
         <span class="todoList-titleGhost"></span>
       </div>
       <div class="todos"></div>
+      <div class="empty">No items yet.</div>
       <div class="toolbar">
         <button class="addTodo">New</button>
       </div>
@@ -47,8 +48,14 @@ class TodoListView extends DomView
 
     # the ghost field positions the pencil icon:
     find('.todoList-titleGhost').text(from('name').map(textOrElse('(untitled list)')))
+    find('.todoList-titleWrapper').classed('hasText', from('name').map((x) -> !blank(x)))
 
     find('.todos').render(from('todos'))
+
+    # n.b. here we have to flatMap rather than map! this is because watchLength
+    # itself returns a Varying, so if we just mapped we be trying to assess
+    # whether to apply the element class based on a Varying rather than a Boolean.
+    find('.empty').classed('hide', from('todos').flatMap((list) -> list.watchLength().map((x) -> x > 0)))
   )
 
   _wireEvents: ->

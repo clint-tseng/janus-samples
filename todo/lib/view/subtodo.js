@@ -21,7 +21,9 @@
       return $('<div class="subtodo"> <div class="subtodoCheck"></div> <div class="subtodoName"></div> </div>');
     };
 
-    SubtodoView._template = template(find('.subtodo').classed('done', from('done')), find('.subtodoCheck').render(from.attribute('done')).context('edit'), find('.subtodoName').render(from.attribute('name')).context('edit'));
+    SubtodoView._template = template(find('.subtodo').classed('done', from('done')), find('.subtodoCheck').render(from.attribute('done')).context('edit'), find('.subtodoName').render(from.attribute('name')).context('edit').options({
+      placeholder: '(new subitem)'
+    }));
 
     return SubtodoView;
 
