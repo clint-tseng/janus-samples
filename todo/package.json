@@ -22,8 +22,8 @@
   },
   "keywords": [ "framework", "server-side", "mvvm", "frp", "rx", "application", "508", "seo" ],
   "dependencies": {
-    "janus": "git://github.com/clint-tseng/janus.git",
-    "janus-stdlib": "~0.2.0",
+    "janus": "~0.2",
+    "janus-stdlib": "~0.2.1",
     "jquery": "~3.1"
   },
   "devDependencies": {
