@@ -21,11 +21,11 @@ class TodoListSummaryView extends DomView
     find('.name').text(from('name').map(textOrElse('(untitled list)')))
 
     find('.completion .completed').text(
-      from('todos').map((list) ->
+      from('todos').flatMap((list) ->
         list.filter((todo) -> todo.watch('done')).watchLength()
     ))
 
-    find('.completion .total').text(from('todos').map((list) -> list.watchLength()))
+    find('.completion .total').text(from('todos').flatMap((list) -> list.watchLength()))
   )
 
 class TodoListView extends DomView
