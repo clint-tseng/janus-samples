@@ -21,67 +21,61 @@ class TodoVM extends Model
   # page as a ghost the user can click on to create a new item.
   @bind('dummySubitem', from(-> new Subtodo()))
 
-class TodoView extends DomView
-  @viewModelClass: TodoVM
-  @_dom: -> $('
-    <div class="todo">
-      <div class="summaryLine">
-        <div class="todoCheck"></div>
-        <div class="todoExpand"></div>
-        <div class="todoTitle"></div>
-      </div>
-      <div class="detailLine">
-        <div class="todoDescription"></div>
-        <div class="todoSubitems"></div>
-        <div class="todoDummySubitem"></div>
-      </div>
+TodoView = DomView.build($('
+  <div class="todo">
+    <div class="summaryLine">
+      <div class="todoCheck"></div>
+      <div class="todoExpand"></div>
+      <div class="todoTitle"></div>
     </div>
-  ')
+    <div class="detailLine">
+      <div class="todoDescription"></div>
+      <div class="todoSubitems"></div>
+      <div class="todoDummySubitem"></div>
+    </div>
+  </div>
+'), template(
 
-  @_template: template(
-    find('.todo').classed('done', from('subject').watch('done'))
+  find('.todo').classed('done', from('subject').watch('done'))
 
-    find('.todoCheck').render(from('subject').attribute('done')).context('edit')
-    find('.todoTitle').render(from('subject').attribute('name'))
-      .context('edit')
-      .options( placeholder: '(new todo)' )
+  find('.todoCheck').render(from('subject').attribute('done')).context('edit')
+  find('.todoTitle').render(from('subject').attribute('name'))
+    .context('edit')
+    .options( placeholder: '(new todo)' )
 
-    find('.todoExpand').render(from.attribute('expanded'))
-      .context('edit')
-      .find( attributes: { style: 'button' } )
-      .options( stringify: (x) -> if x is true then '\u25bc' else '\u25c0' )
-    find('.detailLine').classed('expanded', from('expanded'))
+  find('.todoExpand').render(from.attribute('expanded'))
+    .context('edit')
+    .criteria( attributes: { style: 'button' } )
+    .options( stringify: (x) -> if x is true then '\u25bc' else '\u25c0' )
+  find('.detailLine').classed('expanded', from('expanded'))
 
-    find('.todoDescription').render(from('subject').attribute('description'))
-      .context('edit')
-      .find( attributes: { style: 'multiline' })
-      .options( placeholder: '(details)' )
-    find('.todoSubitems').render(from('subject').watch('subitems')).context('edit')
-    find('.todoDummySubitem').render(from('dummySubitem'))
+  find('.todoDescription').render(from('subject').attribute('description'))
+    .context('edit')
+    .criteria( attributes: { style: 'multiline' })
+    .options( placeholder: '(details)' )
+  find('.todoSubitems').render(from('subject').watch('subitems')).context('edit')
+  find('.todoDummySubitem').render(from('dummySubitem'))
+
+  # if the user clicks on the dummy/ghost entry, create a new subitem and
+  # focus on the appropriate part of that instead.
+  find('.todo').on('click', '.todoDummySubitem', (event, subject, _, dom) ->
+    event.preventDefault()
+    newSubtodo = new Subtodo()
+
+    # add the new subtodo. because we are using a ViewModel, our "true" Todo
+    # subject needs to be first fetched; it is stored on the ViewModel as "subject".
+    subject.get('subject').get('subitems').add(newSubtodo)
+
+    # find that new subtodo we just added and focus on the appropriate part.
+    newSubtodoDom = dom.find('.todoSubitems li:last .subtodo')
+    if $(event.target).is('input[type=checkbox]')
+      newSubtodo.set('done', true)
+      newSubtodoDom.find('input[type=checkbox]').focus()
+    else
+      newSubtodoDom.find('input[type=text]').focus()
   )
 
-  _wireEvents: ->
-    dom = this.artifact()
-
-    # our "subject" is the viewmodel; the actual Todo is saved onto that ViewModel
-    # under the attribute 'subject'.
-    todo = this.subject.get('subject') 
-
-    # if the user clicks on the dummy/ghost entry, create a new subitem and
-    # focus on the appropriate part of that instead.
-    dom.on('click', '.todoDummySubitem', (event) ->
-      event.preventDefault()
-      newSubtodo = new Subtodo()
-      todo.get('subitems').add(newSubtodo)
-
-      # find that new subtodo we just added and focus on the appropriate part.
-      newSubtodoDom = dom.find('.todoSubitems li:last .subtodo')
-      if $(event.target).is('input[type=checkbox]')
-        newSubtodo.set('done', true)
-        newSubtodoDom.find('input[type=checkbox]').focus()
-      else
-        newSubtodoDom.find('input[type=text]').focus()
-    )
+), { viewModelClass: TodoVM })
 
 module.exports = { TodoVM, TodoView, registerWith: (library) -> library.register(Todo, TodoView) }
 

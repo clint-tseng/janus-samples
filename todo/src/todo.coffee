@@ -25,7 +25,7 @@ $ -> # wait for doc ready, then:
   # src/model/main. we then get a view for it from our app (not the view library
   # directly; this way app is plumbed through). then drop it on the page.
   main = new Main({ app })
-  mainView = app.getView(main)
+  mainView = app.vendView(main)
   $('#janus').append(mainView.artifact())
   mainView.wireEvents()
 
