@@ -3,16 +3,13 @@
 { Todos } = require('./todo')
 
 
-class TodoList extends Model
-  @attribute('name', attribute.TextAttribute)
+TodoList = Model.build(
+  attribute('name', attribute.Text)
 
-  @attribute 'todos', class extends attribute.CollectionAttribute
-    @collectionClass: Todos
+  attribute 'todos', class extends attribute.Collection.of(Todos)
     default: -> new Todos()
-    writeDefault: true
-
-class TodoLists extends List
-  @modelClass: TodoList
+)
+TodoLists = List.of(TodoList)
 
 
 # normally, there'd be more to this class. parameters for which ID to fetch, or

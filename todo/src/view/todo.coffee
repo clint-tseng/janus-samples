@@ -6,7 +6,7 @@ $ = require('jquery')
 
 # if this were more substantial it would probably deserve its own view in
 # src/viewmodel/, but as-is it can just live here.
-class TodoVM extends Model
+TodoVM = Model.build(
   # you may ask: why use a boolean attribute for expanding/collapsing a block
   # when it's a couple trivial lines to do so directly in jQuery? one reason is
   # merely pedagogical: this is an opportunity to show the use of ViewModels.
@@ -14,12 +14,14 @@ class TodoVM extends Model
   # it's really a matter of taste. i prefer doing things this way because
   # otherwise you have to be able to draw a philosophical line on what's okay
   # and what's complex enough to merit piping the logic through a ViewModel.
-  @attribute 'expanded', class extends attribute.BooleanAttribute
+  attribute 'expanded', class extends attribute.Boolean
     default: -> false
 
   # we create a subtodo we don't really care about just to easily drop it on the
   # page as a ghost the user can click on to create a new item.
-  @bind('dummySubitem', from(-> new Subtodo()))
+  attribute 'dummySubitem', class extends attribute.Model.of(Subtodo)
+    default: -> new Subtodo()
+)
 
 TodoView = DomView.build($('
   <div class="todo">

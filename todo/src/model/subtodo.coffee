@@ -1,11 +1,10 @@
 { Model, attribute, List } = require('janus')
 
-class Subtodo extends Model
-  @attribute('name', attribute.TextAttribute)
-  @attribute('done', attribute.BooleanAttribute)
-
-class Subtodos extends List
-  @modelClass: Subtodo
+Subtodo = Model.build(
+  attribute('name', attribute.Text)
+  attribute('done', attribute.Boolean)
+)
+Subtodos = List.of(Subtodo)
 
 module.exports = { Subtodo, Subtodos }
 
