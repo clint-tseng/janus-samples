@@ -47,13 +47,13 @@ TodoView = DomView.build($('
 
   find('.todoExpand').render(from.attribute('expanded'))
     .context('edit')
-    .criteria( attributes: { style: 'button' } )
+    .criteria( style: 'button' )
     .options( stringify: (x) -> if x is true then '\u25bc' else '\u25c0' )
   find('.detailLine').classed('expanded', from('expanded'))
 
   find('.todoDescription').render(from('subject').attribute('description'))
     .context('edit')
-    .criteria( attributes: { style: 'multiline' })
+    .criteria( style: 'multiline' )
     .options( placeholder: '(details)' )
   find('.todoSubitems').render(from('subject').watch('subitems')).context('edit')
   find('.todoDummySubitem').render(from('dummySubitem'))

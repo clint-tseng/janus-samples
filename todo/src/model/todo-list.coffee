@@ -1,12 +1,11 @@
-{ Model, attribute, List, types } = require('janus')
-{ Store, Request } = require('janus').store
+{ Varying, Model, attribute, Request, List, types } = require('janus')
 { Todos } = require('./todo')
 
 
 TodoList = Model.build(
   attribute('name', attribute.Text)
 
-  attribute 'todos', class extends attribute.Collection.of(Todos)
+  attribute 'todos', class extends attribute.List.of(Todos)
     default: -> new Todos()
 )
 TodoLists = List.of(TodoList)
@@ -19,11 +18,14 @@ TodoLists = List.of(TodoList)
 # token to be instantiated and passed around.
 class TodoListFetchRequest extends Request
 
-class TodoListFetchStore extends Store
-  _handle: ->
-    stored = localStorage.getItem('todo')
-    this.request.set(types.result.success(if stored? then JSON.parse(stored) else []))
-    types.handling.handled()
+fetchLocalData = (request) ->
+  stored = localStorage.getItem('todo')
+  result =
+    if stored?
+      TodoLists.deserialize(JSON.parse(stored))
+    else
+      new TodoLists()
+  new Varying(types.result.success(result))
 
 
 # similarly, here is a request to save. it's not atypical to simply let the
@@ -33,18 +35,17 @@ class TodoListSaveRequest extends Request
   constructor: (@todoLists) -> super()
   type: types.operation.update()
 
-class TodoListSaveStore extends Store
-  _handle: ->
-    localStorage.setItem('todo', JSON.stringify(this.request.todoLists.serialize()))
-    types.handling.handled()
+saveLocalData = (request) ->
+  localStorage.setItem('todo', JSON.stringify(request.todoLists.serialize()))
+  new Varying(types.result.success())
 
 
 module.exports = {
   TodoList, TodoLists,
-  TodoListFetchRequest, TodoListFetchStore,
-  TodoListSaveRequest, TodoListSaveStore,
+  TodoListFetchRequest, fetchLocalData,
+  TodoListSaveRequest, saveLocalData,
   registerWith: (library) ->
-    library.register(TodoListFetchRequest, TodoListFetchStore)
-    library.register(TodoListSaveRequest, TodoListSaveStore)
+    library.register(TodoListFetchRequest, fetchLocalData)
+    library.register(TodoListSaveRequest, saveLocalData)
 }
 

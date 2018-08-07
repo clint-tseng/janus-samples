@@ -5,7 +5,7 @@ Todo = Model.build(
   attribute('name', attribute.Text)
   attribute('description', attribute.Text)
 
-  attribute 'subitems', class extends attribute.Collection
+  attribute 'subitems', class extends attribute.List
     @collectionClass: Subtodos
     default: -> new Subtodos()
     writeDefault: true

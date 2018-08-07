@@ -14,7 +14,7 @@ MainView = DomView.build($('
     <div class="right contents"></div>
   </div>
 '), template(
-  find('.left .todoList').render(from.attribute('current')).context('edit').criteria( attributes: { style: 'list' } )
+  find('.left .todoList').render(from.attribute('current')).context('edit').criteria( style: 'list' )
   find('.right').render(from('current'))
 
   find('button').on('click', (_, subject) ->
