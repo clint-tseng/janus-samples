@@ -23,7 +23,7 @@ TodoVM = Model.build(
     default: -> new Subtodo()
 )
 
-TodoView = DomView.build($('
+TodoView = DomView.withOptions({ viewModelClass: TodoVM }).build($('
   <div class="todo">
     <div class="summaryLine">
       <div class="todoCheck"></div>
@@ -77,7 +77,7 @@ TodoView = DomView.build($('
       newSubtodoDom.find('input[type=text]').focus()
   )
 
-), { viewModelClass: TodoVM })
+))
 
 module.exports = { TodoVM, TodoView, registerWith: (library) -> library.register(Todo, TodoView) }
 
